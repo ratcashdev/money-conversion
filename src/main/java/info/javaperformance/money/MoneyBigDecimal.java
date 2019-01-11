@@ -202,15 +202,30 @@ class MoneyBigDecimal extends AbstractMoney {
         
     /**
      * Truncate the current value leaving no more than {@code maximalPrecision} signs after decimal point.
-     * The number will be rounded towards closest digit (0-4 -> 0; 5-9 -> 1)
+     * The number will be rounded up to the next closest digit with the given scale
      *
-     * @param maximalPrecision Required precision
+     * @param maximumScale Required precision
      * @return A new Money object normalized to the efficient representation if possible
      */
-    public Money ceil(final int maximalPrecision ) {
-        MoneyFactory.checkPrecision( maximalPrecision );
+    public Money ceil(final int maximumScale ) {
+        MoneyFactory.checkPrecision( maximumScale );
 
-        final BigDecimal res = m_value.setScale( maximalPrecision, BigDecimal.ROUND_UP );
+        final BigDecimal res = m_value.setScale( maximumScale, BigDecimal.ROUND_CEILING );
+        return MoneyFactory.fromBigDecimal( res );
+    }
+    
+    /**
+     * Truncate the current value leaving no more than {@code maximalPrecision} signs after decimal point.
+     * The number will be rounded down to the next closest digit with the given scale
+     *
+     * @param maximumScale Required precision
+     * @return A new Money object normalized to the efficient representation if possible
+     */
+    @Override
+    public Money floor(final int maximumScale ) {
+        MoneyFactory.checkPrecision( maximumScale );
+
+        final BigDecimal res = m_value.setScale( maximumScale, BigDecimal.ROUND_FLOOR );
         return MoneyFactory.fromBigDecimal( res );
     }
 
