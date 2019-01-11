@@ -150,13 +150,21 @@ public interface Money extends Serializable, Comparable<Money> {
      */
     public Money truncate( final int maximumScale );
     
-     /**
+    /**
      * Round up the current value leaving no more than {@code maximumScale} signs after decimal point.
-     * The number will be rounded up closest digit
-     * @param maximumScale Required precision
+     * The number will be rounded up to the closest digit with the given scale
+     * @param maximumScale Required number of decimal places to the right
      * @return A new Money object normalized to the efficient representation if possible
      */
     public Money ceil( final int maximumScale );
+    
+    /**
+     * Round down the current value leaving no more than {@code maximumScale} signs after decimal point.
+     * The number will be rounded down to the closest digit with the given scale
+     * @param maximumScale Required number of decimal places to the right
+     * @return A new Money object normalized to the efficient representation if possible
+     */
+    public Money floor( final int maximumScale );
 
     /**
      * Compares another Money object to this one. Should be used like {@link BigDecimal#compareTo(Object)}. May or may

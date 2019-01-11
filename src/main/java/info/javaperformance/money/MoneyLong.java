@@ -351,6 +351,26 @@ class MoneyLong extends AbstractMoney {
         
         return new MoneyLong( Math.round( m_units * MoneyFactory.MULTIPLIERS_NEG[ m_precision - maximalPrecision ] + 0.5), maximalPrecision ).normalize();
     }
+    
+    /**
+     * Round up the current value leaving no more than {@code maximalScale} digits after decimal point.
+     * The number will be rounded down towards closest lower digit with the given scale
+     *
+     * @param maximalScale Required precision
+     * @return A new Money object normalized to the efficient representation if possible
+     */
+    @Override
+    public Money floor( final int maximalScale ) {
+        if ( m_precision <= maximalScale )
+            return this;
+        MoneyFactory.checkPrecision( maximalScale );
+
+        //remove not needed digits
+        //we can multiply by floating point values here because we will round the result afterwards
+        // add 0.5 to strongly influence the rouding to always round up
+        
+        return new MoneyLong( Math.round( m_units * MoneyFactory.MULTIPLIERS_NEG[ m_precision - maximalScale ] - 0.5), maximalScale ).normalize();
+    }
 
     @Override
     public int signum() {
