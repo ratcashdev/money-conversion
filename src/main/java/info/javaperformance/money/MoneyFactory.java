@@ -36,7 +36,7 @@ public class MoneyFactory {
     public static final Money EIGHT = new MoneyLong(8, 0);
     public static final Money NINE = new MoneyLong(9, 0);
     public static final Money TEN = new MoneyLong(10, 0);
-    
+
     static final int MAX_LONG_LENGTH = Long.toString( Long.MAX_VALUE ).length();
 
     public static final int MAX_ALLOWED_PRECISION = 15;
@@ -57,6 +57,10 @@ public class MoneyFactory {
             MULTIPLIERS_NEG[ i ] = 1.0 / val;
             val *= 10;
         }
+    }
+
+    public static void setBigDecimalCallback(BigDecimalUsedCallback callback) {
+        MoneyBigDecimal.setUsageCallback(callback);
     }
 
     static void checkPrecision(int precision) {
@@ -406,5 +410,4 @@ public class MoneyFactory {
         return new MoneyLong( units, 0 );
 
     }
-    
 }
