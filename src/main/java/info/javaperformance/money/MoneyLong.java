@@ -504,7 +504,7 @@ class MoneyLong extends AbstractMoney {
     
     @Override
     public Money divide(Money divisor, int precision) {
-        return divideWithPrecisionGuarantee(divisor, precision, true);
+        return divideWithPrecisionGuarantee(divisor, precision, false);
     }
     
     /**
@@ -555,10 +555,10 @@ class MoneyLong extends AbstractMoney {
      * @param allowMore give the exact number of precision digits, or more if available
      * @return 
      */
-    private Money divideWithPrecisionGuarantee(Money divisor, int precision, boolean allowMore) {
+    Money divideWithPrecisionGuarantee(Money divisor, int precision, boolean allowMore) {
         if(divisor instanceof MoneyLong) {
             MoneyLong div = (MoneyLong) divisor;
-            
+
             final int dividendLen = digitCount(m_units);
             // maximum multipler that when applied to the dividend will still fit into LONG without overflow
             final int maxPossibleShift = Math.max(0, MoneyFactory.MAX_POW10 - dividendLen);
@@ -567,9 +567,15 @@ class MoneyLong extends AbstractMoney {
                 return MoneyFactory.fromBigDecimal(toBigDecimal().divide(divisor.toBigDecimal(), precision, RoundingMode.DOWN));
             }
 
-            if(allowMore) {
-                final long aUnits = m_units * MoneyFactory.MULTIPLIERS[necessaryShift];
-                final long res = aUnits / div.m_units; //this automatically truncates fractional parts
+            if (!allowMore) {
+                final long res;
+                if (necessaryShift < 0) {
+                    final long aUnits = m_units;
+                    res = aUnits / (div.m_units * MoneyFactory.MULTIPLIERS[Math.abs(necessaryShift)]);
+                } else {
+                    final long aUnits = m_units * MoneyFactory.MULTIPLIERS[necessaryShift];
+                    res = aUnits / div.m_units; //this automatically truncates fractional parts
+                }
                 return new MoneyLong(res, precision).normalize();
             } else {
                 final long aUnits = m_units * MoneyFactory.MULTIPLIERS[maxPossibleShift];
@@ -577,8 +583,8 @@ class MoneyLong extends AbstractMoney {
                 final int precisionAfterDivide = maxPossibleShift + m_precision - div.m_precision;
                 return new MoneyLong(res, precisionAfterDivide).normalize();
             }
-        } 
-        
+        }
+
         return MoneyFactory.fromBigDecimal(toBigDecimal().divide(divisor.toBigDecimal(), precision, RoundingMode.DOWN));
     }
     
