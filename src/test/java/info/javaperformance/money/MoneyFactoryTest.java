@@ -170,14 +170,12 @@ public class MoneyFactoryTest {
         assertEquals( "-1", MoneyFactory.fromString("-1.0").toString() );
     }
 
-	@Test
     private void toCharArrayHelper(final char[] buffer, final String number) {
         char[] chars = number.toCharArray();
         System.arraycopy(chars, 0, buffer, 10, chars.length);
         assertEquals( number, MoneyFactory.fromCharArray(buffer, 10, chars.length).toString() );
     }
 
-	@Test
     private void toByteArrayHelper(final byte[] buffer, final String number) {
         byte[] bytes = number.getBytes();
         System.arraycopy(bytes, 0, buffer, 10, bytes.length);
