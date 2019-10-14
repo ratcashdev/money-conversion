@@ -21,7 +21,7 @@
     <groupId>info.java-performance</groupId>
     <artifactId>money-conversion</artifactId>
     <packaging>jar</packaging>
-    <version>2.2-SNAPSHOT</version>
+    <version>2.2.0</version>
     <name>Money conversion / arithmetic</name>
     <description>High performance money conversion and arithmetic operations implementation</description>
 
