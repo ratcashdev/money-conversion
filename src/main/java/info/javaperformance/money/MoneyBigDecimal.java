@@ -34,13 +34,34 @@ class MoneyBigDecimal extends AbstractMoney {
     private final BigDecimal m_value;
     private static MathContext CTX = new MathContext(9, RoundingMode.DOWN);
 
+    /**
+     * default is a No-OP callback
+     */
+    private static BigDecimalUsedCallback bigDecimalCallback = new BigDecimalUsedCallback() {
+        @Override
+        public long getCount() {
+            return 0;
+        }
+
+        @Override
+        public void notify(String name) {
+            ;
+        }
+    };
+
+    static void setUsageCallback(BigDecimalUsedCallback callback) {
+        bigDecimalCallback = callback;
+    }
+
     public MoneyBigDecimal( final BigDecimal value ) {
         m_value = value;
+        bigDecimalCallback.notify("BigDecimal constructor");
     }
 
     public MoneyBigDecimal( final double value )
     {
         m_value = new BigDecimal( value, MathContext.DECIMAL64 ).stripTrailingZeros(); //decimal64 to match double
+        bigDecimalCallback.notify("double constructor");
     }
 
     public MoneyBigDecimal( final String value )
@@ -48,6 +69,7 @@ class MoneyBigDecimal extends AbstractMoney {
         //important - do not use DECIMAL64 context here - you will lose precision for huge values.
         //at the same time using it is required for BigDecimal(double) constructor - it matches "double" range.
         m_value = new BigDecimal( value );
+        bigDecimalCallback.notify("string constructor");
     }
 
     public double toDouble() {
