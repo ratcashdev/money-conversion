@@ -68,4 +68,31 @@ public class MoneyLongTest {
         assertEquals(res, expected);
     }
 
+    @Test
+    public void testMultiplyWithZero1() {
+        MoneyLong m = (MoneyLong) MoneyFactory.fromUnits(123456789123L, 7);
+        Money d = MoneyFactory.ZERO;
+        Money res = m.multiplyLimitedScale(d, 7);
+        assertEquals(res, MoneyFactory.ZERO);
+    }
+
+    @Test
+    public void testMultiplyWithZero2() {
+        Money p = MoneyFactory.fromString("0.00266039");
+        Money q = MoneyFactory.fromString("32824.977");
+        Money pct = MoneyFactory.fromString("0.0000");
+
+        Money cost = p.multiplyLimitedScale(q,8);
+        Money res = cost.multiplyLimitedScale(pct, 8);
+        assertEquals(res, MoneyFactory.ZERO);
+    }
+
+    @Test
+    public void testMultiplyWithZero3() {
+        Money p = MoneyFactory.fromString("123456789123");
+        Money q = MoneyFactory.ZERO;
+
+        Money cost = p.multiplyLimitedPrecision(q,8);
+        assertEquals(cost, MoneyFactory.ZERO);
+    }
 }
