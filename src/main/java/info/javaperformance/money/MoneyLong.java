@@ -422,6 +422,9 @@ class MoneyLong extends AbstractMoney {
     
      @Override
     public Money multiplyLimitedPrecision(final Money multiplier, final int significantDigitCount) {
+        if (multiplier.isZero()) {
+            return MoneyFactory.ZERO;
+        }
         if(multiplier instanceof MoneyBigDecimal) {
             return new MoneyBigDecimal(toBigDecimal()).multiply(multiplier);
         }
@@ -474,6 +477,9 @@ class MoneyLong extends AbstractMoney {
     
     @Override
     public Money multiplyLimitedScale( final Money multiplier, final int scale ) {
+        if (multiplier.isZero()) {
+            return MoneyFactory.ZERO;
+        }
         if(multiplier instanceof MoneyBigDecimal || scale > MoneyFactory.MAX_ALLOWED_PRECISION) {
             return new MoneyBigDecimal(toBigDecimal()).multiplyLimitedScale(multiplier, scale);
         }
