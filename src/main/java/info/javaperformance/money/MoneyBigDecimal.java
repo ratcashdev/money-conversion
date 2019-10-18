@@ -157,14 +157,14 @@ class MoneyBigDecimal extends AbstractMoney {
     
     @Override
     public Money multiplyLimitedPrecision(final Money multiplier, final int digitCount) {
-        return new MoneyBigDecimal(m_value.multiply(multiplier.toBigDecimal(), 
-                new MathContext(digitCount, RoundingMode.DOWN)).stripTrailingZeros());
+        return MoneyFactory.fromBigDecimal(m_value.multiply(multiplier.toBigDecimal(), 
+                new MathContext(digitCount, RoundingMode.DOWN)));
     }
     
     @Override
     public Money multiplyLimitedScale( final Money multiplier, final int scale ) {
         BigDecimal res = m_value.multiply(multiplier.toBigDecimal()).setScale(scale, RoundingMode.DOWN);
-        return new MoneyBigDecimal(res.stripTrailingZeros());
+        return MoneyFactory.fromBigDecimal(res);
     }
     
 

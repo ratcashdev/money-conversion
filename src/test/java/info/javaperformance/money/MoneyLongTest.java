@@ -16,6 +16,7 @@
 package info.javaperformance.money;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import org.testng.annotations.Test;
 
 /**
@@ -94,5 +95,19 @@ public class MoneyLongTest {
 
         Money cost = p.multiplyLimitedPrecision(q,8);
         assertEquals(cost, MoneyFactory.ZERO);
+    }
+    
+    @Test
+    public void testMultiplicationWithOverflowResultsInMoneyLong() {
+        Money a = MoneyFactory.fromString("94390.46071144");
+        assertTrue(a instanceof MoneyLong);
+        Money b = MoneyFactory.fromString("0.87999998");
+        assertTrue(b instanceof MoneyLong);
+        short scale = 8;
+        // exact value:   83063.6035382579857712
+        // using scale=8: 83063.60353825
+        Money result = a.multiplyLimitedScale(b, scale);
+        assertTrue(result instanceof MoneyLong);
+        assertEquals(result, MoneyFactory.fromString("83063.60353825"));
     }
 }
