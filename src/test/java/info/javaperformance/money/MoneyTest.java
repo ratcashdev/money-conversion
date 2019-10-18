@@ -484,15 +484,16 @@ public class MoneyTest {
         b = MoneyFactory.fromUnits(Long.MAX_VALUE, 0);
         assertTrue(a instanceof MoneyLong);
         assertTrue(b instanceof MoneyLong);
-        // this exceeds the range of LONG
+        // this exceeds the range of LONG regardless of the scale
         assertTrue(a.multiplyLimitedScale(b) instanceof MoneyBigDecimal);
         
         a = MoneyFactory.fromString("99999999999");
         b = MoneyFactory.fromString("0.999999999");
         assertTrue(a instanceof MoneyLong);
         assertTrue(b instanceof MoneyLong);
-        // this should produce over 18 digits in total, fallback MoneyBigDecimal
-        assertTrue(a.multiplyLimitedScale(b) instanceof MoneyBigDecimal);
+        // this should produce over 18 digits in total during multiplication
+        // but the scale cut limits it to 18 so a MoneyLong is possible
+        assertTrue(a.multiplyLimitedScale(b) instanceof MoneyLong);
         
         a = MoneyFactory.fromUnits(999999999, 9);
         b = MoneyFactory.fromString("0.999999999");
